@@ -1,0 +1,19 @@
+.input-group .invalid-answer {
+    border: 5px solid red;
+}
+
+#answer {
+    margin-left: 2%;
+}
+
+#warning {
+    color: red;
+}
+
+h1 {
+    text-align: center;
+}
+
+#main-content {
+    margin-left: 2%;
+}

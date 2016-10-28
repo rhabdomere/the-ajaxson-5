@@ -2,7 +2,35 @@
 
 $(document).ready(function() {
     // register our function as the "callback" to be triggered by the form's submission event
-    $("#form-gif-request").submit(fetchAndDisplayGif); // in other words, when the form is submitted, fetchAndDisplayGif() will be executed
+
+    $("input[name='robot']").click(function(){
+        event.preventDefault();
+        $("input[name='robot']").removeClass("invalid-answer");
+        $("#warning").attr("hidden", true);
+
+
+    });
+
+
+    $("#form-gif-request").submit(function(){
+        // prevent the form from submitting (otherwise page will refresh)
+        event.preventDefault();
+
+        var answer=$("input[name='robot']").val();
+        if (answer == 5) {
+            $("input[name='robot']").removeClass("invalid-answer");
+            $("#warning").attr("hidden", true);
+            fetchAndDisplayGif(event);
+        }
+        else {
+
+            $("#gif").attr("hidden", true);
+            $("input[name='robot']").addClass("invalid-answer");
+            $("#warning").attr("hidden", false);
+        }
+
+
+    });
 });
 
 
@@ -19,17 +47,18 @@ function fetchAndDisplayGif(event) {
     event.preventDefault();
     
     // get the user's input text from the DOM
-    var searchQuery = ""; // TODO should be e.g. "dance"
+    var searchQuery = $("input[name='tag']").val(); // TODO should be e.g. "dance"
+    console.log(searchQuery);
 
     // configure a few parameters to attach to our request
     var params = { 
         api_key: "dc6zaTOxFJmzC", 
-        tag : "" // TODO should be e.g. "jackson 5 dance"
+        tag: searchQuery// TODO should be e.g. "jackson 5 dance"
     };
     
     // make an ajax request for a random GIF
     $.ajax({
-        url: "", // TODO where should this request be sent?
+        url: "https://api.giphy.com/v1/gifs/random", // TODO where should this request be sent?
         data: params, // attach those extra parameters onto the request
         success: function(response) {
             // if the response comes back successfully, the code in here will execute.
@@ -40,7 +69,16 @@ function fetchAndDisplayGif(event) {
             
             // TODO
             // 1. set the source attribute of our image to the image_url of the GIF
+            //console.log(response.data.image_url);
+
+            $("#gif").attr("src", response.data.image_url );
+
+
             // 2. hide the feedback message and display the image
+             //setGifLoadedStatus(true); this equals the following two lines
+            $("#gif").attr("hidden", false);
+            $("#feedback").attr("hidden", true);
+
         },
         error: function() {
             // if something went wrong, the code in here will execute instead of the success function
@@ -53,6 +91,7 @@ function fetchAndDisplayGif(event) {
     
     // TODO
     // give the user a "Loading..." message while they wait
+    $("p").text("Loading...");
     
 }
 
